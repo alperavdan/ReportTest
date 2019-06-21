@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JSReportTestApp</name>
+    </assembly>
+    <members>
+        <member name="M:JSReportTestApp.Controllers.JSReportController.Get">
+            <summary>
+            pdf rapor görüntülemek için browser'a url'i giriniz
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
