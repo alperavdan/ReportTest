@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using jsreport.AspNetCore;
-using jsreport.Binary;
 using jsreport.Local;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
+using jsreport.Binary;
+
 
 namespace JSReportTestApp
 {
@@ -32,7 +28,9 @@ namespace JSReportTestApp
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddJsReport(new LocalReporting()
-                    .UseBinary(JsReportBinary.GetBinary())
+                     .UseBinary((RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
+        jsreport.Binary.JsReportBinary.GetBinary() :
+        jsreport.Binary.Linux.JsReportBinary.GetBinary()))
                     .AsUtility()
                     .Create());
 
@@ -48,6 +46,7 @@ namespace JSReportTestApp
                 var basePath = AppContext.BaseDirectory; //Depricated PlatformServices.Default.Application.ApplicationBasePath
                 var xmlPath = Path.Combine(basePath, "Test.Api.xml");
                 c.IncludeXmlComments(xmlPath);
+                c.OperationFilter<FileUploadOperation>(); //Register File Upload Operation Filter
             });
         }
 
